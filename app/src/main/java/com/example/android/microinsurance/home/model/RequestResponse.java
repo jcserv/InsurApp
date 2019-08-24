@@ -34,7 +34,6 @@ public class RequestResponse {
         this.tags = tags;
         this.favState = favState;
     }
-
     public String getId() {
         return id;
     }
@@ -71,4 +70,3 @@ public class RequestResponse {
         this.favState = favState;
     }
 }
-

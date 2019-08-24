@@ -59,11 +59,6 @@ public class AssetsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         capturePreview = view.findViewById(R.id.capture_preview);
         cameraToolbar = view.findViewById(R.id.camera_toolbar);
-        backButton = view.findViewById(R.id.back_button);
-        backButton.getBackground().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
-        backButton.setOnClickListener((view1)->{
-            Toast.makeText(getActivity().getApplicationContext(), "Assets",Toast.LENGTH_SHORT).show();
-        });
 
         setupNetwork();
 
@@ -77,7 +72,7 @@ public class AssetsFragment extends Fragment {
     private void setupToolbar() {
         cameraToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         cameraToolbar.setNavigationOnClickListener((view) -> {
-            findNavController(this).navigate(R.id.action_camera_dest_to_home_dest);
+            findNavController(this).navigate(R.id.action_assets_dest_to_home_dest);
         });
         cameraToolbar.setTitle("Assets");
     }
