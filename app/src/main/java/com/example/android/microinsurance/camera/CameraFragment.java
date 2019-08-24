@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,7 +31,6 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.example.android.microinsurance.R;
-import com.example.android.microinsurance.common.util.BitmapScaler;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +50,7 @@ public class CameraFragment extends Fragment {
 
     private File photoFile;
 
+    private LinearLayout rootView;
     private ImageView capturePreview;
     private Toolbar cameraToolbar;
     private Button saveButton;
@@ -70,6 +71,7 @@ public class CameraFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        rootView = view.findViewById(R.id.root_content_frame);
         capturePreview = view.findViewById(R.id.capture_preview);
         cameraToolbar = view.findViewById(R.id.camera_toolbar);
         saveButton = view.findViewById(R.id.save_button);
@@ -133,7 +135,7 @@ public class CameraFragment extends Fragment {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (resultCode == RESULT_OK) {
 
-                showAllViews();
+                showRootViews();
 
                 //Rotate Bitmap to correct orientation
                 Bitmap orientationCorrectedBitmap = rotateBitmapOrientation(photoFile.getAbsolutePath());
@@ -151,12 +153,9 @@ public class CameraFragment extends Fragment {
         }
     }
 
-    private void showAllViews(){
+    private void showRootViews(){
         //show all views
-        cameraToolbar.setVisibility(View.VISIBLE);
-        capturePreview.setVisibility(View.VISIBLE);
-        //awsLogo.setVisibility(View.VISIBLE);
-        //awsTitle.setVisibility(View.VISIBLE);
+        rootView.setVisibility(View.VISIBLE);
     }
 
     // From: https://stackoverflow.com/questions/12933085/android-camera-intent-saving-image-landscape-when-taken-portrait/12933632#12933632
