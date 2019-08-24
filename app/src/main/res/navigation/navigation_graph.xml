@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation.xml"
+    app:startDestination="@+id/home_dest">
+
+    <fragment
+        android:id="@+id/home_dest"
+        android:name="com.example.android.microinsurance.home.HomeFragment"
+        android:label=""
+        tools:layout="@layout/fragment_home"/>
+
+    <fragment
+        android:id="@+id/camera_dest"
+        android:name="com.example.android.microinsurance.camera.CameraFragment"
+        tools:layout="@layout/fragment_camera"/>
+
+    <fragment
+        android:id="@+id/profile_dest"
+        android:name="com.example.android.microinsurance.profile.ProfileFragment"
+        tools:layout="@layout/fragment_home"/>
+
+</navigation>

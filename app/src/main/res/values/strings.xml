@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Micro Insurance</string>
+
+    <string name="title_home">Home</string>
+    <string name="title_camera">Camera</string>
+    <string name="title_profile">Profile</string>
+
+    <string name="camera">camera</string>
+    <string name="home">home</string>
+    <string name="profile">profile</string>
+
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_afternoon">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
+</resources>

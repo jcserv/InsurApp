@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--This is test api endpoint-->
+    <string name="url_melonbun_api" translatable="false">https://fdw9pvpyk6.execute-api.us-east-1.amazonaws.com/dev/</string>
+
+</resources>
