@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.PorterDuff;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,36 +16,44 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.example.android.microinsurance.R;
+import com.example.android.microinsurance.common.util.BitmapScaler;
 
 import java.io.File;
+import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
-
+import static androidx.navigation.fragment.NavHostFragment.findNavController;
 
 //TODO: Clean up needed
 public class CameraFragment extends Fragment {
 
-    // This is an arbitrary number we are using to keep tab of the permission
-    // request. Where an app has multiple context for requesting permission,
-    // this can help differentiate the different contexts
+    // This is an arbitrary number for camera permission
     private static final int REQUEST_CODE_PERMISSIONS = 10;
-    private final String APP_TAG = "MyCustomApp";
-    public String photoFileName = "photo.jpg";
-    File photoFile;
+    private static final String APP_TAG = "MICRO_INSURANCE";
+    private static final String photoFileName = "capture.jpg";
+    private static final int SCALE_WIDTH = 1024;
+    private static final int SCALE_HEIGHT = 1024;
+
+    private File photoFile;
 
     private ImageView capturePreview;
+    private Toolbar cameraToolbar;
+    private Button saveButton;
+    private EditText toolbarTitle;
 
     public static CameraFragment newInstance() {
         CameraFragment fragment = new CameraFragment();
@@ -59,16 +70,26 @@ public class CameraFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         capturePreview = view.findViewById(R.id.capture_preview);
+        cameraToolbar = view.findViewById(R.id.camera_toolbar);
+        saveButton = view.findViewById(R.id.save_button);
+        saveButton.getBackground().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
+        toolbarTitle = view.findViewById(R.id.result_edit_text);
+        saveButton.setOnClickListener((view1)->{
+            String content = toolbarTitle.getText().toString();
+            Toast.makeText(getActivity().getApplicationContext(),content,Toast.LENGTH_SHORT).show();
+        });
 
+        setupToolbar();
         launchCamera();
+    }
 
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(R.string.title_camera);
-        }
-
+    private void setupToolbar() {
+        cameraToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
+        cameraToolbar.setNavigationOnClickListener((view) -> {
+            findNavController(this).navigate(R.id.action_camera_dest_to_home_dest);
+        });
+        cameraToolbar.setTitle(R.string.camera_title);
     }
 
     private void launchCamera() {
@@ -87,7 +108,6 @@ public class CameraFragment extends Fragment {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_PERMISSIONS);
             }
         }
-
     }
 
     // Returns the File for a photo stored on disk given the fileName
@@ -108,28 +128,63 @@ public class CameraFragment extends Fragment {
         return file;
     }
 
-
-    /**
-     * Check if permission (camera) specified in the manifest have been granted
-     */
-    private boolean cameraPermissionsGranted() {
-        int permissionCamera = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA);
-        return permissionCamera == PackageManager.PERMISSION_GRANTED;
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (resultCode == RESULT_OK) {
-                // by this point we have the camera photo on disk
-                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                // RESIZE BITMAP, see section below
-                // Load the taken image into a preview
-                capturePreview.setImageBitmap(takenImage);
 
-            } else { // Result was a failure
-                //Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+                showAllViews();
+
+                //Rotate Bitmap to correct orientation
+                Bitmap orientationCorrectedBitmap = rotateBitmapOrientation(photoFile.getAbsolutePath());
+
+                // RESIZE BITMAP
+                //Bitmap resizedBitmap = BitmapScaler.scaleToFill(orientationCorrectedBitmap, SCALE_WIDTH, SCALE_HEIGHT);
+
+                // Load the taken image into a preview
+                capturePreview.setImageBitmap(orientationCorrectedBitmap);
+
+            } else {
+                // User did not take photos, go back to home destination
+                findNavController(this).navigate(R.id.action_camera_dest_to_home_dest);
             }
         }
+    }
+
+    private void showAllViews(){
+        //show all views
+        cameraToolbar.setVisibility(View.VISIBLE);
+        capturePreview.setVisibility(View.VISIBLE);
+        //awsLogo.setVisibility(View.VISIBLE);
+        //awsTitle.setVisibility(View.VISIBLE);
+    }
+
+    // From: https://stackoverflow.com/questions/12933085/android-camera-intent-saving-image-landscape-when-taken-portrait/12933632#12933632
+    Bitmap rotateBitmapOrientation(String photoFilePath) {
+        // Create and configure BitmapFactory
+        BitmapFactory.Options bounds = new BitmapFactory.Options();
+        bounds.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(photoFilePath, bounds);
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        Bitmap bm = BitmapFactory.decodeFile(photoFilePath, opts);
+        // Read EXIF Data
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(photoFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+        int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
+        int rotationAngle = 0;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
+        // Rotate Bitmap
+        Matrix matrix = new Matrix();
+        matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
+        // Return result
+        return rotatedBitmap;
     }
 }
