@@ -7,6 +7,9 @@
     <color name="circleBorder">#50FFFFFF</color>
     <color name="solidCircle">#AAFFFFFF</color>
 
+    <color name="white">#FFFFFF</color>
+    <color name="black">#00000F</color>
+    <color name="transparent">#00000000</color>
 
 
 </resources>

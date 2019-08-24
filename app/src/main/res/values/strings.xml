@@ -15,17 +15,26 @@
     <string name="greeting_afternoon">Good afternoon</string>
     <string name="greeting_evening">Good evening</string>
 
-    <string name="username">Jim P.</string>
+    <string name="username">Bob B.</string>
     <string name="email_field">Email:</string>
-    <string name="email">jim.p@gmail.com</string>
+    <string name="email">bob.b@gmail.com</string>
     <string name="pass_field">Change Password</string>
     <string name="address_field">Address:</string>
     <string name="address">100 George St.</string>
     <string name="notif_field">Notifications</string>
     <string name="faq">FAQ</string>
-    <string name="privacy">Privacy</string>
 
     <string name="chev_desc">Navigation Arrow</string>
-    <string name="privacy">Privacy</string>
+    <string name="privacy_title">Privacy</string>
     <string name="contact">Contact Us</string>
+
+    <string name="camera_title">Your result</string>
+    <string name="powered_by_aws">Powered by </string>
+    <string name="result_title_hint">Enter title</string>
+    <string name="save">Save</string>
+    <string name="confidence_level">Confidence level</string>
+    <string name="category">Category</string>
+    <string name="description">Description</string>
+    <string name="value">Value</string>
+
 </resources>
