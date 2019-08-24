@@ -6,14 +6,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ScrollView;
-import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.microinsurance.R;
@@ -24,7 +21,6 @@ import com.example.android.microinsurance.home.network.HomeApi;
 import com.example.android.microinsurance.home.network.HomeService;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.card.MaterialCardView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -34,6 +30,8 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+import static androidx.navigation.fragment.NavHostFragment.findNavController;
+
 
 public class HomeFragment extends Fragment {
 
@@ -70,14 +68,20 @@ public class HomeFragment extends Fragment {
         homeToolbarBackground = (ImageView) view.findViewById(R.id.home_toolbar_background);
         appBarLayout = (AppBarLayout) view.findViewById(R.id.appBar_layout);
 
-        setupNetwork();
+        //setupNetwork();
 
         setupAppBar();
 
-        responseList = view.findViewById(R.id.home_list);
-        responseList.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+        //decorateView();
 
-        decorateView();
+
+        androidx.fragment.app.Fragment fragment = this;
+        final Button button = (Button) view.findViewById(R.id.assets_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                findNavController(fragment).navigate(R.id.action_home_dest_to_assets_dest);
+            }
+        });
     }
 
     private void setupAppBar() {
