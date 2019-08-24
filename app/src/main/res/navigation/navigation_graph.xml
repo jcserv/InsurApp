@@ -9,16 +9,25 @@
         android:id="@+id/home_dest"
         android:name="com.example.android.microinsurance.home.HomeFragment"
         android:label=""
-        tools:layout="@layout/fragment_home"/>
+        tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/camera_dest"
         android:name="com.example.android.microinsurance.camera.CameraFragment"
-        tools:layout="@layout/fragment_camera"/>
+        tools:layout="@layout/fragment_camera">
+        <action
+            android:id="@+id/action_camera_dest_to_home_dest"
+            app:destination="@id/home_dest"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
+            app:popUpTo="@+id/home_dest" />
+    </fragment>
 
     <fragment
         android:id="@+id/profile_dest"
         android:name="com.example.android.microinsurance.profile.ProfileFragment"
-        tools:layout="@layout/fragment_home"/>
+        tools:layout="@layout/fragment_home" />
 
 </navigation>
