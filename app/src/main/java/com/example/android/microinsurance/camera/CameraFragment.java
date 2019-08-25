@@ -20,8 +20,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
+
 import org.apache.commons.io.FileUtils;
 
 import androidx.annotation.NonNull;
@@ -36,6 +39,7 @@ import com.example.android.microinsurance.R;
 import com.example.android.microinsurance.camera.model.ImageResponse;
 import com.example.android.microinsurance.camera.network.UploadApi;
 import com.example.android.microinsurance.camera.network.UploadService;
+import com.example.android.microinsurance.common.ErrorComponent;
 import com.example.android.microinsurance.common.NetworkBuilder;
 
 import java.io.File;
@@ -60,11 +64,16 @@ public class CameraFragment extends Fragment {
 
     private File photoFile;
 
-    private LinearLayout rootView;
+    private ProgressBar progressBar;
+    private ScrollView scrollView;
     private ImageView capturePreview;
     private Toolbar cameraToolbar;
     private Button saveButton;
     private EditText toolbarTitle;
+    private TextView confidenceLevel;
+    private TextView category;
+    private TextView value;
+    private ErrorComponent errorComponent;
 
     public static CameraFragment newInstance() {
         CameraFragment fragment = new CameraFragment();
@@ -81,16 +90,22 @@ public class CameraFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        rootView = view.findViewById(R.id.root_content_frame);
         capturePreview = view.findViewById(R.id.capture_preview);
         cameraToolbar = view.findViewById(R.id.camera_toolbar);
         saveButton = view.findViewById(R.id.save_button);
         saveButton.getBackground().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
         toolbarTitle = view.findViewById(R.id.result_edit_text);
-        saveButton.setOnClickListener((view1)->{
+        saveButton.setOnClickListener((view1) -> {
             String content = toolbarTitle.getText().toString();
-            Toast.makeText(getActivity().getApplicationContext(),content,Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), content, Toast.LENGTH_SHORT).show();
         });
+        category = view.findViewById(R.id.categories_value);
+        value = view.findViewById(R.id.value_value);
+        confidenceLevel = view.findViewById(R.id.confidence_value);
+        scrollView = view.findViewById(R.id.scroll_view);
+        progressBar = view.findViewById(R.id.progress_bar);
+        errorComponent = view.findViewById(R.id.error_view);
+        errorComponent.setRetryButtonOnClickListener(view1 -> findNavController(this).navigate(R.id.action_camera_dest_self));
 
         setupToolbar();
         launchCamera();
@@ -179,24 +194,60 @@ public class CameraFragment extends Fragment {
         UploadService uploadService = new UploadService(uploadApi);
         Call<ImageResponse> call = uploadService.uploadImage(encoded);
 
+
+        showProgressBar();
+        hideErrorComponent();
         call.enqueue(new Callback<ImageResponse>() {
             @Override
             public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
-                Toast.makeText(getContext(), "success" + response.body().getTitle(), Toast.LENGTH_SHORT).show();
+                hideProgressBar();
+                if (response.body() != null) {
+                    showResults(response.body());
+                } else {
+                    showErrorComponent();
+                }
+                //Toast.makeText(getContext(), "success" + response.body().getTitle(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Call<ImageResponse> call, Throwable t) {
-                Toast.makeText(getContext(), "failed", Toast.LENGTH_SHORT).show();
+                hideProgressBar();
+                showErrorComponent();
+                Toast.makeText(getContext(), "Failed", Toast.LENGTH_LONG).show();
             }
 
         });
 
     }
 
-    private void showRootViews(){
+    private void showResults(ImageResponse imageResponse) {
+        toolbarTitle.setText(imageResponse.getTitle());
+        confidenceLevel.setText(Math.round(imageResponse.getConfidence()) + "%");
+        category.setText(imageResponse.getCategory());
+        value.setText("$" + imageResponse.getValue());
+        showRootViews();
+    }
+
+    private void showRootViews() {
         //show all views
-        rootView.setVisibility(View.VISIBLE);
+        cameraToolbar.setVisibility(View.VISIBLE);
+        scrollView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgressBar(){
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void showProgressBar(){
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideErrorComponent(){
+        errorComponent.setVisibility(View.GONE);
+    }
+
+    private void showErrorComponent(){
+        errorComponent.setVisibility(View.VISIBLE);
     }
 
     // From: https://stackoverflow.com/questions/12933085/android-camera-intent-saving-image-landscape-when-taken-portrait/12933632#12933632

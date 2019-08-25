@@ -8,7 +8,10 @@ public class ImageResponse {
     private String title;
 
     @SerializedName("confidence")
-    private int confidence;
+    private float confidence;
+
+    @SerializedName("category")
+    private String category;
 
     @SerializedName("description")
     private String description;
@@ -19,9 +22,10 @@ public class ImageResponse {
     @SerializedName("purchaseDate")
     private String purchaseDate;
 
-    public ImageResponse(String title, int confidence, String description, int value, String purchaseDate) {
+    public ImageResponse(String title, int confidence, String category, String description, int value, String purchaseDate) {
         this.title = title;
         this.confidence = confidence;
+        this.category = category;
         this.description = description;
         this.value = value;
         this.purchaseDate = purchaseDate;
@@ -31,8 +35,12 @@ public class ImageResponse {
         return title;
     }
 
-    public int getConfidence() {
+    public float getConfidence() {
         return confidence;
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     public String getDescription() {

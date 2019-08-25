@@ -4,13 +4,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="gone"
     android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:layout_weight="1"/>
+
+    <com.example.android.microinsurance.common.ErrorComponent
+        android:id="@+id/error_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:layout_weight="1" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/camera_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         app:titleTextColor="@android:color/white">
@@ -55,8 +72,10 @@
     </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -124,12 +143,74 @@
                         android:layout_marginStart="12dp"
                         android:layout_marginEnd="12dp"
                         android:maxLines="1"
-                        android:text="98%"
                         android:textColor="@android:color/black"
                         android:textSize="24sp"
                         app:layout_constraintBottom_toBottomOf="@+id/confidence_icon"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/confidence_icon" />
+                    />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/value_card"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginLeft="@dimen/mtrl_card_spacing"
+                android:layout_marginTop="@dimen/mtrl_card_spacing"
+                android:layout_marginRight="@dimen/mtrl_card_spacing"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/confidence_card">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/value_icon"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="12dp"
+                        android:maxWidth="48dp"
+                        android:maxHeight="48dp"
+                        android:src="@drawable/ic_money"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/value_title"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/value_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:text="@string/value"
+                        android:textColor="@android:color/black"
+                        android:textSize="24sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/value_icon"
+                        app:layout_constraintStart_toEndOf="@id/value_icon"
+                        app:layout_constraintTop_toTopOf="@+id/value_icon" />
+
+                    <TextView
+                        android:id="@+id/value_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
+                        android:maxLines="1"
+                        android:text="$200"
+                        android:textColor="@android:color/black"
+                        android:textSize="24sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/value_icon"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/value_icon" />
                     />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -149,7 +230,7 @@
                 android:foreground="?android:attr/selectableItemBackground"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/confidence_card">
+                app:layout_constraintTop_toBottomOf="@+id/value_card">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -185,7 +266,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
                         android:maxLines="1"
-                        android:text="Electronics"
                         android:textColor="@android:color/black"
                         android:textSize="20sp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -246,69 +326,6 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/value_card"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:layout_marginLeft="@dimen/mtrl_card_spacing"
-                android:layout_marginTop="@dimen/mtrl_card_spacing"
-                android:layout_marginRight="@dimen/mtrl_card_spacing"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/description_card">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/value_icon"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="12dp"
-                        android:maxWidth="48dp"
-                        android:maxHeight="48dp"
-                        android:src="@drawable/ic_confidence_level"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/value_title"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/value_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:text="@string/value"
-                        android:textColor="@android:color/black"
-                        android:textSize="24sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/value_icon"
-                        app:layout_constraintStart_toEndOf="@id/value_icon"
-                        app:layout_constraintTop_toTopOf="@+id/value_icon" />
-
-                    <TextView
-                        android:id="@+id/value_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginEnd="12dp"
-                        android:maxLines="1"
-                        android:text="$200"
-                        android:textColor="@android:color/black"
-                        android:textSize="24sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/value_icon"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/value_icon" />
-                    />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -316,7 +333,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/value_card">
+                app:layout_constraintTop_toBottomOf="@+id/description_card">
 
                 <TextView
                     android:id="@+id/aws_title"

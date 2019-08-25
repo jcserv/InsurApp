@@ -35,4 +35,7 @@
     <string name="description">Description</string>
     <string name="value">Value</string>
 
+    <string name="error_text">Something went wrong</string>
+    <string name="retry">Retry</string>
+
 </resources>
