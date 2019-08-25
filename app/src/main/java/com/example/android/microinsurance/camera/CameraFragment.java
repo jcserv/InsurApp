@@ -260,6 +260,7 @@ public class CameraFragment extends Fragment {
         confidenceLevel.setText(Math.round(imageResponse.getConfidence()) + "%");
         categoryText.setText(imageResponse.getCategory());
         valueText.setText(Integer.toString(imageResponse.getValue()));
+        purchaseDateText.setText(imageResponse.getPurchaseDate());
         showRootViews();
     }
 
