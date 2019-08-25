@@ -1,5 +1,6 @@
 package com.example.android.microinsurance.home.network;
 
+import com.example.android.microinsurance.home.model.InsuranceResponseList;
 import com.example.android.microinsurance.home.model.RequestResponseList;
 
 import io.reactivex.Single;
@@ -10,5 +11,5 @@ public interface HomeApi {
     Single<RequestResponseList> getRequests();
 
     @GET("get4Recommendations")
-    Single<RequestResponseList> getRecommendations();
+    Single<InsuranceResponseList> getRecommendations();
 }

@@ -439,7 +439,9 @@
                 android:text="@string/recommended_insurance"
                 android:textSize="24sp" />
 
-            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/material_card_4"
+                android:layout_width="match_parent"
                 android:layout_height="100dp"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_marginLeft="@dimen/mtrl_card_spacing"
@@ -506,7 +508,6 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
                         android:maxLines="1"
-                        android:text="2019-09-08"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -526,7 +527,9 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/material_card_5"
+                android:layout_width="match_parent"
                 android:layout_height="100dp"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_marginLeft="@dimen/mtrl_card_spacing"
@@ -593,7 +596,6 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
                         android:maxLines="1"
-                        android:text="2019-09-08"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -613,7 +615,9 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/material_card_6"
+                android:layout_width="match_parent"
                 android:layout_height="100dp"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_marginLeft="@dimen/mtrl_card_spacing"
@@ -680,7 +684,6 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
                         android:maxLines="1"
-                        android:text="2019-09-08"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -700,7 +703,9 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/material_card_7"
+                android:layout_width="match_parent"
                 android:layout_height="100dp"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_marginLeft="@dimen/mtrl_card_spacing"
@@ -767,7 +772,6 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
                         android:maxLines="1"
-                        android:text="2019-09-08"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -793,6 +797,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/see_more_insurance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -800,6 +805,11 @@
                     android:focusable="true"
                     android:padding="16dp"
                     android:text="@string/see_more" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp">
+                </View>
 
             </RelativeLayout>
 

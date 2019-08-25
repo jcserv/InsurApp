@@ -3,6 +3,6 @@
 
     <!--This is test api endpoint-->
     <string name="url_melonbun_api" translatable="false">http://fdw9pvpyk6.execute-api.us-east-1.amazonaws.com/dev/</string>
-    <string name="url_image_upload_endpoint" translatable="false">http://hackthe7th.us-east-2.elasticbeanstalk.com/</string>
+    <string name="url_image_upload_endpoint" translatable="false">http://hackthe8th.us-east-2.elasticbeanstalk.com/</string>
 
 </resources>

@@ -12,22 +12,21 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 
 import com.example.android.microinsurance.R;
 import com.example.android.microinsurance.common.NetworkBuilder;
-import com.example.android.microinsurance.home.model.RequestResponse;
+import com.example.android.microinsurance.home.model.InsuranceResponseList;
 import com.example.android.microinsurance.home.model.RequestResponseList;
 import com.example.android.microinsurance.home.network.HomeApi;
 import com.example.android.microinsurance.home.network.HomeService;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -38,7 +37,8 @@ import static androidx.navigation.fragment.NavHostFragment.findNavController;
 
 public class HomeFragment extends Fragment {
 
-    private Single<RequestResponseList> requestListObservable;
+    private Single<RequestResponseList> assetObservable;
+    private Single<InsuranceResponseList> recommendationsObservable;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ImageView homeToolbarBackground;
@@ -66,25 +66,31 @@ public class HomeFragment extends Fragment {
     private TextView value3;
     private TextView date3;
 
+    MaterialCardView materialCard4;
     private TextView title4;
     private TextView category4; //Description
     private TextView value4;
     private TextView date4;
 
+    MaterialCardView materialCard5;
     private TextView title5;
     private TextView category5; //Description
     private TextView value5;
     private TextView date5;
 
+    MaterialCardView materialCard6;
     private TextView title6;
     private TextView category6; //Description
     private TextView value6;
     private TextView date6;
 
+    MaterialCardView materialCard7;
     private TextView title7;
     private TextView category7; //Description
     private TextView value7;
     private TextView date7;
+
+    private TextView seeMoreInsurance;
 
     public static HomeFragment newInstance() {
         HomeFragment homeFragment = new HomeFragment();
@@ -132,21 +138,36 @@ public class HomeFragment extends Fragment {
         value3 = view.findViewById(R.id.item_card_value3);
         date3 = view.findViewById(R.id.item_card_date3);
 
+        materialCard4 = view.findViewById(R.id.material_card_4);
+        title4 = view.findViewById(R.id.item_card_title4);
+        category4 = view.findViewById(R.id.item_card_category4);
+        value4 = view.findViewById(R.id.item_card_value4);
+        date4 = view.findViewById(R.id.item_card_date4);
+        materialCard4.setVisibility(View.GONE);
+
+        materialCard5 = view.findViewById(R.id.material_card_5);
         title5 = view.findViewById(R.id.item_card_title5);
         category5 = view.findViewById(R.id.item_card_category5);
         value5 = view.findViewById(R.id.item_card_value5);
         date5 = view.findViewById(R.id.item_card_date5);
+        materialCard5.setVisibility(View.GONE);
 
+        materialCard6 = view.findViewById(R.id.material_card_6);
         title6 = view.findViewById(R.id.item_card_title6);
         category6 = view.findViewById(R.id.item_card_category6);
         value6 = view.findViewById(R.id.item_card_value6);
         date6 = view.findViewById(R.id.item_card_date6);
+        materialCard6.setVisibility(View.GONE);
 
+        materialCard7 = view.findViewById(R.id.material_card_7);
         title7 = view.findViewById(R.id.item_card_title7);
         category7 = view.findViewById(R.id.item_card_category7);
         value7 = view.findViewById(R.id.item_card_value7);
         date7 = view.findViewById(R.id.item_card_date7);
+        materialCard7.setVisibility(View.GONE);
 
+        seeMoreInsurance = view.findViewById(R.id.see_more_insurance);
+        seeMoreInsurance.setVisibility(View.GONE);
         fab = view.findViewById(R.id.fab);
 
         fab.setOnClickListener(view1 -> findNavController(this).navigate(R.id.action_home_dest_to_camera_dest));
@@ -222,15 +243,46 @@ public class HomeFragment extends Fragment {
         date3.setText(requestResponseList.getAssets().get(3).getPurchaseDate());
     }
 
+    // TODO: Clean up
+    private void showRecInsurance(InsuranceResponseList insuranceResponseList) {
+
+        if (insuranceResponseList.getPolicies().size() >= 1) {
+            materialCard4.setVisibility(View.VISIBLE);
+            title4.setText(insuranceResponseList.getPolicies().get(0).getName());
+            category4.setText(insuranceResponseList.getPolicies().get(0).getDescription());
+            value4.setText("$" + Integer.toString(insuranceResponseList.getPolicies().get(0).getPremium()));
+
+        } else if (insuranceResponseList.getPolicies().size() >= 2) {
+            materialCard5.setVisibility(View.VISIBLE);
+            title5.setText(insuranceResponseList.getPolicies().get(0).getName());
+            category5.setText(insuranceResponseList.getPolicies().get(0).getDescription());
+            value5.setText("$" + Integer.toString(insuranceResponseList.getPolicies().get(0).getPremium()));
+
+        } else if (insuranceResponseList.getPolicies().size() >= 3) {
+            materialCard6.setVisibility(View.VISIBLE);
+            title6.setText(insuranceResponseList.getPolicies().get(0).getName());
+            category6.setText(insuranceResponseList.getPolicies().get(0).getDescription());
+            value6.setText("$" + Integer.toString(insuranceResponseList.getPolicies().get(0).getPremium()));
+
+        } else if (insuranceResponseList.getPolicies().size() >= 4) {
+            materialCard7.setVisibility(View.VISIBLE);
+            title7.setText(insuranceResponseList.getPolicies().get(0).getName());
+            category7.setText(insuranceResponseList.getPolicies().get(0).getDescription());
+            value7.setText("$" + Integer.toString(insuranceResponseList.getPolicies().get(0).getPremium()));
+            seeMoreInsurance.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void setupNetwork() {
         HomeApi homeApi = new NetworkBuilder(getString(R.string.url_image_upload_endpoint)).UseGson().useRxJava2().build(HomeApi.class);
         HomeService homeService = new HomeService(homeApi);
-        requestListObservable = homeService.getResponses().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+        assetObservable = homeService.getResponses().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+        recommendationsObservable = homeService.getRecommendations().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
     @SuppressLint("CheckResult")
     private void decorateView() {
-        requestListObservable.subscribeWith(new DisposableSingleObserver<RequestResponseList>() {
+        assetObservable.subscribeWith(new DisposableSingleObserver<RequestResponseList>() {
             @Override
             public void onSuccess(RequestResponseList requestResponseList) {
                 showAssetRequests(requestResponseList);
@@ -238,7 +290,19 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onError(Throwable e) {
-                Toast.makeText(getContext(),"failed", Toast.LENGTH_SHORT);
+                Toast.makeText(getContext(), "failed", Toast.LENGTH_SHORT);
+                //Error flow
+            }
+        });
+        recommendationsObservable.subscribeWith(new DisposableSingleObserver<InsuranceResponseList>() {
+            @Override
+            public void onSuccess(InsuranceResponseList insuranceResponseList) {
+                showRecInsurance(insuranceResponseList);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(getContext(), "failed", Toast.LENGTH_SHORT);
                 //Error flow
             }
         });
