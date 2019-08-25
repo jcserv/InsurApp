@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import org.apache.commons.io.FileUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,9 +33,17 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.example.android.microinsurance.R;
+import com.example.android.microinsurance.camera.model.ImageResponse;
+import com.example.android.microinsurance.camera.network.UploadApi;
+import com.example.android.microinsurance.camera.network.UploadService;
+import com.example.android.microinsurance.common.NetworkBuilder;
 
 import java.io.File;
 import java.io.IOException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 import static androidx.navigation.fragment.NavHostFragment.findNavController;
@@ -135,10 +145,21 @@ public class CameraFragment extends Fragment {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (resultCode == RESULT_OK) {
 
-                showRootViews();
+                //showRootViews();
 
                 //Rotate Bitmap to correct orientation
                 Bitmap orientationCorrectedBitmap = rotateBitmapOrientation(photoFile.getAbsolutePath());
+
+                byte bytes[] = null;
+                try {
+                    bytes = FileUtils.readFileToByteArray(photoFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                String encoded = Base64.encodeToString(bytes, Base64.DEFAULT);
+
+                sentImageNetworkRequest(encoded);
 
                 // RESIZE BITMAP
                 //Bitmap resizedBitmap = BitmapScaler.scaleToFill(orientationCorrectedBitmap, SCALE_WIDTH, SCALE_HEIGHT);
@@ -151,6 +172,26 @@ public class CameraFragment extends Fragment {
                 findNavController(this).navigate(R.id.action_camera_dest_to_home_dest);
             }
         }
+    }
+
+    private void sentImageNetworkRequest(String encoded) {
+        UploadApi uploadApi = new NetworkBuilder(getString(R.string.url_image_upload_endpoint)).UseGson().useRxJava2().build(UploadApi.class);
+        UploadService uploadService = new UploadService(uploadApi);
+        Call<ImageResponse> call = uploadService.uploadImage(encoded);
+
+        call.enqueue(new Callback<ImageResponse>() {
+            @Override
+            public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
+                Toast.makeText(getContext(), "success" + response.body().getTitle(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<ImageResponse> call, Throwable t) {
+                Toast.makeText(getContext(), "failed", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
     }
 
     private void showRootViews(){
