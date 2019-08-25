@@ -1,6 +1,7 @@
 package com.example.android.microinsurance.home.network;
 
 import com.example.android.microinsurance.home.model.RequestResponse;
+import com.example.android.microinsurance.home.model.RequestResponseList;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class HomeService {
         this.homeApi = homeApi;
     }
 
-    public Single<List<RequestResponse>> getResponses() {
+    public Single<RequestResponseList> getResponses() {
         return homeApi.getRequests();
     }
 }

@@ -2,37 +2,37 @@ package com.example.android.microinsurance.home.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class RequestResponse {
 
     @SerializedName("id")
     private String id;
+
     @SerializedName("name")
     private String title;
-    @SerializedName("description")
-    private String body;
-    @SerializedName("created_at")
-    private String date;
-    @SerializedName("created_by")
-    private String userName;
-    @SerializedName("status")
-    private String status;
-    @SerializedName("tags")
-    private List<String> tags;
-    @SerializedName("fav_state")
-    private Boolean favState;
 
-    public RequestResponse(String id, String title, String body, String date, String userName, String status, List<String> tags, Boolean favState) {
+    @SerializedName("confidence")
+    private float confidence;
+
+    @SerializedName("category")
+    private String category;
+
+    @SerializedName("description")
+    private String description;
+
+    @SerializedName("value")
+    private int value;
+
+    @SerializedName("purchaseDate")
+    private String purchaseDate;
+
+    public RequestResponse(String id,String title, int confidence, String category, String description, int value, String purchaseDate) {
         this.id = id;
         this.title = title;
-        this.body = body;
-        this.date = date;
-        this.userName = userName;
-        this.status = status;
-        this.tags = tags;
-        this.favState = favState;
+        this.confidence = confidence;
+        this.category = category;
+        this.description = description;
+        this.value = value;
+        this.purchaseDate = purchaseDate;
     }
 
     public String getId() {
@@ -43,32 +43,55 @@ public class RequestResponse {
         return title;
     }
 
-    public String getBody() {
-        return body;
+    public float getConfidence() {
+        return confidence;
     }
 
-    public String getDate() {
-        return date;
+    public String getCategory() {
+        return category;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getDescription() {
+        return description;
     }
 
-    public String getStatus() {
-        return status;
+    public int getValue() {
+        return value;
     }
 
-    public List<String> getTags() {
-        return tags == null ? new ArrayList<>() : tags;
+    public String getPurchaseDate() {
+        return purchaseDate;
     }
 
-    public Boolean getFavState() {
-        return favState == null ? false : favState;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setFavState(Boolean favState) {
-        this.favState = favState;
+    public void setConfidence(float confidence) {
+        this.confidence = confidence;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setConfidence(int confidence) {
+        this.confidence = confidence;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    public void setPurchaseDate(String purchaseDate) {
+        this.purchaseDate = purchaseDate;
     }
 }
-

@@ -362,7 +362,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
-                        android:text="@string/date"
+                        android:hint="@string/date"
                         android:textColor="@android:color/black"
                         android:textSize="24sp"
                         app:layout_constraintBottom_toBottomOf="@+id/purchase_icon"
