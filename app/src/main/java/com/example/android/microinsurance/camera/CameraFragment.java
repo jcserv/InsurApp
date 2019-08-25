@@ -245,12 +245,12 @@ public class CameraFragment extends Fragment {
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                //Toast.makeText(getContext(), "success", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "success", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                //Toast.makeText(getContext(), "Failed", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Failed", Toast.LENGTH_LONG).show();
             }
         });
     }

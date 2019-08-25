@@ -66,31 +66,21 @@ public class HomeFragment extends Fragment {
     private TextView value3;
     private TextView date3;
 
-    MaterialCardView materialCard4;
     private TextView title4;
     private TextView category4; //Description
     private TextView value4;
-    private TextView date4;
 
-    MaterialCardView materialCard5;
     private TextView title5;
     private TextView category5; //Description
     private TextView value5;
-    private TextView date5;
 
-    MaterialCardView materialCard6;
     private TextView title6;
     private TextView category6; //Description
     private TextView value6;
-    private TextView date6;
 
-    MaterialCardView materialCard7;
     private TextView title7;
     private TextView category7; //Description
     private TextView value7;
-    private TextView date7;
-
-    private TextView seeMoreInsurance;
 
     public static HomeFragment newInstance() {
         HomeFragment homeFragment = new HomeFragment();
@@ -138,36 +128,22 @@ public class HomeFragment extends Fragment {
         value3 = view.findViewById(R.id.item_card_value3);
         date3 = view.findViewById(R.id.item_card_date3);
 
-        materialCard4 = view.findViewById(R.id.material_card_4);
         title4 = view.findViewById(R.id.item_card_title4);
         category4 = view.findViewById(R.id.item_card_category4);
         value4 = view.findViewById(R.id.item_card_value4);
-        date4 = view.findViewById(R.id.item_card_date4);
-        materialCard4.setVisibility(View.GONE);
 
-        materialCard5 = view.findViewById(R.id.material_card_5);
         title5 = view.findViewById(R.id.item_card_title5);
         category5 = view.findViewById(R.id.item_card_category5);
         value5 = view.findViewById(R.id.item_card_value5);
-        date5 = view.findViewById(R.id.item_card_date5);
-        materialCard5.setVisibility(View.GONE);
 
-        materialCard6 = view.findViewById(R.id.material_card_6);
         title6 = view.findViewById(R.id.item_card_title6);
         category6 = view.findViewById(R.id.item_card_category6);
         value6 = view.findViewById(R.id.item_card_value6);
-        date6 = view.findViewById(R.id.item_card_date6);
-        materialCard6.setVisibility(View.GONE);
 
-        materialCard7 = view.findViewById(R.id.material_card_7);
         title7 = view.findViewById(R.id.item_card_title7);
         category7 = view.findViewById(R.id.item_card_category7);
         value7 = view.findViewById(R.id.item_card_value7);
-        date7 = view.findViewById(R.id.item_card_date7);
-        materialCard7.setVisibility(View.GONE);
 
-        seeMoreInsurance = view.findViewById(R.id.see_more_insurance);
-        seeMoreInsurance.setVisibility(View.GONE);
         fab = view.findViewById(R.id.fab);
 
         fab.setOnClickListener(view1 -> findNavController(this).navigate(R.id.action_home_dest_to_camera_dest));
@@ -205,7 +181,7 @@ public class HomeFragment extends Fragment {
                         drawable = getResources().getDrawable(R.drawable.morning);
                     } else if (timeStamp >= 13 && timeStamp < 19) {
                         greetingMessage = getString(R.string.greeting_afternoon);
-                        drawable = getResources().getDrawable(R.drawable.afternoon);
+                        drawable = getResources().getDrawable(R.drawable.morning); //morning looks better than afternoon
                     } else if (timeStamp >= 19 && timeStamp <= 23) {
                         greetingMessage = getString(R.string.greeting_evening);
                         drawable = getResources().getDrawable(R.drawable.night);
@@ -246,31 +222,22 @@ public class HomeFragment extends Fragment {
     // TODO: Clean up
     private void showRecInsurance(InsuranceResponseList insuranceResponseList) {
 
-        if (insuranceResponseList.getPolicies().size() >= 1) {
-            materialCard4.setVisibility(View.VISIBLE);
-            title4.setText(insuranceResponseList.getPolicies().get(0).getName());
-            category4.setText(insuranceResponseList.getPolicies().get(0).getDescription());
-            value4.setText("$" + Integer.toString(insuranceResponseList.getPolicies().get(0).getPremium()));
+        title4.setText(insuranceResponseList.getPolicies().get(0).getName());
+        category4.setText(insuranceResponseList.getPolicies().get(0).getDescription());
+        value4.setText("$" + Integer.toString(insuranceResponseList.getPolicies().get(0).getPremium()));
 
-        } else if (insuranceResponseList.getPolicies().size() >= 2) {
-            materialCard5.setVisibility(View.VISIBLE);
-            title5.setText(insuranceResponseList.getPolicies().get(0).getName());
-            category5.setText(insuranceResponseList.getPolicies().get(0).getDescription());
-            value5.setText("$" + Integer.toString(insuranceResponseList.getPolicies().get(0).getPremium()));
+        title5.setText(insuranceResponseList.getPolicies().get(1).getName());
+        category5.setText(insuranceResponseList.getPolicies().get(1).getDescription());
+        value5.setText("$" + Integer.toString(insuranceResponseList.getPolicies().get(1).getPremium()));
 
-        } else if (insuranceResponseList.getPolicies().size() >= 3) {
-            materialCard6.setVisibility(View.VISIBLE);
-            title6.setText(insuranceResponseList.getPolicies().get(0).getName());
-            category6.setText(insuranceResponseList.getPolicies().get(0).getDescription());
-            value6.setText("$" + Integer.toString(insuranceResponseList.getPolicies().get(0).getPremium()));
+        title6.setText(insuranceResponseList.getPolicies().get(2).getName());
+        category6.setText(insuranceResponseList.getPolicies().get(2).getDescription());
+        value6.setText("$" + Integer.toString(insuranceResponseList.getPolicies().get(2).getPremium()));
 
-        } else if (insuranceResponseList.getPolicies().size() >= 4) {
-            materialCard7.setVisibility(View.VISIBLE);
-            title7.setText(insuranceResponseList.getPolicies().get(0).getName());
-            category7.setText(insuranceResponseList.getPolicies().get(0).getDescription());
-            value7.setText("$" + Integer.toString(insuranceResponseList.getPolicies().get(0).getPremium()));
-            seeMoreInsurance.setVisibility(View.VISIBLE);
-        }
+        title7.setText(insuranceResponseList.getPolicies().get(3).getName());
+        category7.setText(insuranceResponseList.getPolicies().get(3).getDescription());
+        value7.setText("$" + Integer.toString(insuranceResponseList.getPolicies().get(3).getPremium()));
+
     }
 
     private void setupNetwork() {
