@@ -36,6 +36,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.example.android.microinsurance.R;
+import com.example.android.microinsurance.camera.model.ImageRequest;
 import com.example.android.microinsurance.camera.model.ImageResponse;
 import com.example.android.microinsurance.camera.network.UploadApi;
 import com.example.android.microinsurance.camera.network.UploadService;
@@ -63,6 +64,7 @@ public class CameraFragment extends Fragment {
     private static final int SCALE_HEIGHT = 1024;
 
     private File photoFile;
+    private String encoded;
 
     private ProgressBar progressBar;
     private ScrollView scrollView;
@@ -71,9 +73,12 @@ public class CameraFragment extends Fragment {
     private Button saveButton;
     private EditText toolbarTitle;
     private TextView confidenceLevel;
-    private TextView category;
-    private TextView value;
+    private TextView categoryText;
+    private EditText valueText;
     private ErrorComponent errorComponent;
+    private EditText descriptionText;
+    private EditText categoriesValue;
+    private EditText purchaseDateText;
 
     public static CameraFragment newInstance() {
         CameraFragment fragment = new CameraFragment();
@@ -96,16 +101,27 @@ public class CameraFragment extends Fragment {
         saveButton.getBackground().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.MULTIPLY);
         toolbarTitle = view.findViewById(R.id.result_edit_text);
         saveButton.setOnClickListener((view1) -> {
-            String content = toolbarTitle.getText().toString();
-            Toast.makeText(getActivity().getApplicationContext(), content, Toast.LENGTH_SHORT).show();
+            String name = toolbarTitle.getText().toString();
+            String category = categoryText.getText().toString();
+            int value = Integer.parseInt(valueText.getText().toString());
+            String description = descriptionText.getText().toString();
+            String purchaseDate = purchaseDateText.getText().toString();
+
+            ImageRequest imageRequest = new ImageRequest(name, category, description, value, purchaseDate, encoded);
+
+            sentImageUpdateNetworkRequest(imageRequest);
+            findNavController(this).navigate(R.id.action_camera_dest_to_home_dest);
+            //Toast.makeText(getActivity().getApplicationContext(), name, Toast.LENGTH_SHORT).show();
         });
-        category = view.findViewById(R.id.categories_value);
-        value = view.findViewById(R.id.value_value);
+        categoryText = view.findViewById(R.id.categories_value);
+        valueText = view.findViewById(R.id.value_value);
         confidenceLevel = view.findViewById(R.id.confidence_value);
         scrollView = view.findViewById(R.id.scroll_view);
         progressBar = view.findViewById(R.id.progress_bar);
         errorComponent = view.findViewById(R.id.error_view);
         errorComponent.setRetryButtonOnClickListener(view1 -> findNavController(this).navigate(R.id.action_camera_dest_self));
+        descriptionText = view.findViewById(R.id.description_title);
+        purchaseDateText = view.findViewById(R.id.purchase_title);
 
         setupToolbar();
         launchCamera();
@@ -138,7 +154,7 @@ public class CameraFragment extends Fragment {
     }
 
     // Returns the File for a photo stored on disk given the fileName
-    public File getPhotoFileUri(String fileName) {
+    private File getPhotoFileUri(String fileName) {
         // Get safe storage directory for photos
         // Use `getExternalFilesDir` on Context to access package-specific directories.
         // This way, we don't need to request external read/write runtime permissions.
@@ -172,7 +188,7 @@ public class CameraFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                String encoded = Base64.encodeToString(bytes, Base64.DEFAULT);
+                encoded = Base64.encodeToString(bytes, Base64.DEFAULT);
 
                 sentImageNetworkRequest(encoded);
 
@@ -220,11 +236,29 @@ public class CameraFragment extends Fragment {
 
     }
 
+    private void sentImageUpdateNetworkRequest(ImageRequest imageRequest) {
+        UploadApi uploadApi = new NetworkBuilder(getString(R.string.url_image_upload_endpoint)).UseGson().useRxJava2().build(UploadApi.class);
+        UploadService uploadService = new UploadService(uploadApi);
+        Call<String> call = uploadService.uploadImageUpdate(imageRequest);
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                //Toast.makeText(getContext(), "success", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                //Toast.makeText(getContext(), "Failed", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     private void showResults(ImageResponse imageResponse) {
         toolbarTitle.setText(imageResponse.getTitle());
         confidenceLevel.setText(Math.round(imageResponse.getConfidence()) + "%");
-        category.setText(imageResponse.getCategory());
-        value.setText("$" + imageResponse.getValue());
+        categoryText.setText(imageResponse.getCategory());
+        valueText.setText(Integer.toString(imageResponse.getValue()));
         showRootViews();
     }
 
@@ -234,19 +268,19 @@ public class CameraFragment extends Fragment {
         scrollView.setVisibility(View.VISIBLE);
     }
 
-    private void hideProgressBar(){
+    private void hideProgressBar() {
         progressBar.setVisibility(View.GONE);
     }
 
-    private void showProgressBar(){
+    private void showProgressBar() {
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    private void hideErrorComponent(){
+    private void hideErrorComponent() {
         errorComponent.setVisibility(View.GONE);
     }
 
-    private void showErrorComponent(){
+    private void showErrorComponent() {
         errorComponent.setVisibility(View.VISIBLE);
     }
 

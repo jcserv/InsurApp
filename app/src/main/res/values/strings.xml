@@ -37,5 +37,6 @@
 
     <string name="error_text">Something went wrong</string>
     <string name="retry">Retry</string>
+    <string name="date">Date</string>
 
 </resources>
