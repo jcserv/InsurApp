@@ -39,7 +39,7 @@ The app is architect with the mindset of single activity and multi fragments usi
 **GET /get4Recommendations:** returns json containing list of top 4 most confident recommendations for the user using his current assets recorded in the database. Recommendations taken from Keras Neural Network currently trained with dummy data.
 
 ## Roles
-I worked on most of the app, camera flow, submit flow, home flow, error case flows, app navigation architecture, network layers and app designs. 
+Bob Bao worked on most of the app, camera flow, submit flow, home flow, error case flows, app navigation architecture, network layers and app designs. 
 
 [Jarrod Servilla](https://github.com/jcserv) worked on profile flow, home page UI and login integration with firebase (login branch).
 
